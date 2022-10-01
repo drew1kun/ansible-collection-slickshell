@@ -24,11 +24,11 @@
     state: link
   with_items:
     # This may require refactoring for system-wide nvim setup:
-    - { src: "{{ vim_root_dir }}", dest: '~/.config/nvim' }
-    - { src: "{{ vim_root_config }}", dest: "{{ vim_root_dir }}/init.vim" }
+    - {src: "{{ vim_root_dir }}", dest: '~/.config/nvim'}
+    - {src: "{{ vim_root_config }}", dest: "{{ vim_root_dir }}/init.vim"}
     # Info:
-    #- { src: '~/.vim', dest: '~/.config/nvim' }
-    #- { src: '~/.vimrc', dest: '~/.vim/init.vim' }
+    # - {src: '~/.vim', dest: '~/.config/nvim'}
+    # - {src: '~/.vimrc', dest: '~/.vim/init.vim'}
   when: "'user' in vim_env"
   tags: vim
 

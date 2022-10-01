@@ -1,7 +1,7 @@
 ---
 - name: '[dependencies] Install ohmyzsh dependencies for non-Darwin systems: zsh, git'
   package:
-    name: [ 'zsh', 'git', 'bc' ]
+    name: ['zsh', 'git', 'bc']
     state: present
   become: true  # disable this for MacOS
   register: ohmyzsh_dep_result

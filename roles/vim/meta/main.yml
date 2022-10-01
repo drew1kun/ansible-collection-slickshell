@@ -11,14 +11,14 @@ galaxy_info:
       versions: all
     - name: Ubuntu
       versions:
-      - trusty
+        - trusty
     - name: Debian
       versions:
-      - stretch
-      - jessie
-      - wheezy
-      - buster
-      - bullseye
+        - stretch
+        - jessie
+        - wheezy
+        - buster
+        - bullseye
   galaxy_tags:
     - vim
     - development

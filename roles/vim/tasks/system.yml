@@ -30,6 +30,8 @@
 
 - name: "[system] Copying .vim folder to /var/lib/vim/addons/"
   copy: src=vim/ dest=/var/lib/vim/addons/
+  directory_mode: 0755
+  mode: 0644
   become: true
   tags: vim
 

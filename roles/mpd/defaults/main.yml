@@ -12,7 +12,7 @@ mpd_ncmpcpp_mpd_host: localhost
 # ATTENTION!
 # OS-Specific variables can be found in vars/ directory of this role
 #
-#================= OS AGNOSTIC MPD CONFIG VARIABLES ====================
+# == OS AGNOSTIC MPD CONFIG VARIABLES ==
 mpd_port: 6600
 mpd_bind_to_address: any
 
@@ -21,7 +21,7 @@ mpd_restore_paused: true
 mpd_auto_update: true
 mpd_follow_inside_symlinks: true
 mpd_follow_outside_symlinks: false
-#=======================================================================
+# ======================================
 
 mpd_users:
   - "{{ ansible_user_id }}"

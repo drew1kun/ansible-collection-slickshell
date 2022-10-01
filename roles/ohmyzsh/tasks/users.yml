@@ -123,8 +123,8 @@
     - ohmyzsh_setup_tmux is defined
     - ohmyzsh_setup_tmux
   tags:
-  - ohmyzsh
-  - ohmyzsh_tmux
+    - ohmyzsh
+    - ohmyzsh_tmux
 
 - name: '[users] Install tmux for MacOS'
   homebrew:

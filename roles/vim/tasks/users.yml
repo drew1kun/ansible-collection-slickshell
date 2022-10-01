@@ -3,7 +3,7 @@
 - name: "[user] Create {{ vim_root_cust_conf_dir }} directory for custom configuration content"
   file: path="{{ vim_root_conf_plug_dir }}" state=directory
   become: true    # Required for become_user to work
-  #become_method: su  # only good for root user to become another user when sudo package is not available
+  mode: 0755
   become_user: "{{ item }}"
   with_items: "{{ vim_users }}"
   tags: vim
@@ -16,7 +16,7 @@
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
     mode: 0644
   with_items: "{{ vim_users }}"
-  #when: (vim_users is defined and item != "root")
+  # when: (vim_users is defined and item != "root")
   when: vim_users is defined
   become: true
   become_user: "{{ item }}"
@@ -41,7 +41,7 @@
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
     mode: 0644
   with_items: "{{ vim_users }}"
-  #when: (vim_users is defined and item != "root")
+  # when: (vim_users is defined and item != "root")
   when: vim_users is defined
   become: true
   become_user: "{{ item }}"
@@ -85,6 +85,8 @@
     dest: ~/.vim/
     owner: "{{ item }}"
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
+  directory_mode: 0755
+  mode: 0644
   with_items: "{{ vim_users }}"
   when: vim_users is defined
   become: true
@@ -104,8 +106,6 @@
   when: vim_users is defined
   become: true
   become_user: "{{ item }}"
-#  vars:
-#    ansible_python_interpreter: '/usr/local/bin/python3'
   tags: vim
 
 - name: '[user] Set EDITOR and TERM environment variables'

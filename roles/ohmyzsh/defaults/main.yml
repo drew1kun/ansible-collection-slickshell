@@ -11,37 +11,37 @@ ohmyzsh_custom_aliases: $HOME/.zsh/aliases.local
 #   source ${HOME}/.zsh/omz_powerlevel9k.cfg
 ohmyzsh_powerlevel10k: true
 ohmyzsh_powerlevel10k_import_config: false
-ohmyzsh_powerlevel9k: false              # true - use p9k prompt style | false - use p10k prompt style
+ohmyzsh_powerlevel9k: false               # true - use p9k prompt style | false - use p10k prompt style
 ohmyzsh_powerlevel9k_cfg: ${HOME}/.zsh/omz_powerlevel9k.cfg
 
 ohmyzsh_setup_tmux: true
 
-ohmyzsh_default_theme: 'robbyrussell' # default fallback theme
+ohmyzsh_default_theme: 'robbyrussell'     # default fallback theme
 
 ohmyzsh_users:
-- user: "{{ ansible_user_id }}"       # user name
-  theme: powerlevel10k/powerlevel10k  # ohmyzsh theme; use "random" for random theme
-  ssh_ids: []                         # list of SSH ids to add to ohmyzsh ssh manager plugin
-  state: present                      # present or absent, to install/uninstall
-  colorls: true                        # Install colorls ruby gem
-  plugins:
-  - sudo                              # Prefix current or previous command with sudo by pressing Esc twice
+  - user: "{{ ansible_user_id }}"         # user name
+    theme: powerlevel10k/powerlevel10k    # ohmyzsh theme; use "random" for random theme
+    ssh_ids: []                           # list of SSH ids to add to ohmyzsh ssh manager plugin
+    state: present                        # present or absent, to install/uninstall
+    colorls: true                         # Install colorls ruby gem
+    plugins:
+      - sudo                              # Prefix current or previous command with sudo by pressing Esc twice
 
-- user: root
-  theme: powerlevel10k/powerlevel10k
-  ssh_ids: []
-  state: present
-  colorls: false                         # Install colorls ruby gem
+  - user: root
+    theme: powerlevel10k/powerlevel10k
+    ssh_ids: []
+    state: present
+    colorls: false                        # Install colorls ruby gem
 
 ohmyzsh_default_plugins:
-- cp          # User rsync instead of cp
-- gnu-utils   # Link unix utilites to `g`-named ones (ghead, gsed etc.)
-- tmux        # Tmux aliases + configuration
+  - cp          # User rsync instead of cp
+  - gnu-utils   # Link unix utilites to `g`-named ones (ghead, gsed etc.)
+  - tmux        # Tmux aliases + configuration
 
 ohmyzsh_custom_plugins:
-#  Make zsh behave as fish:
-#  These three must be in following order:
-#  zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
-- zsh-autosuggestions
-- zsh-history-substring-search
-- zsh-syntax-highlighting
+  # Make zsh behave as fish:
+  # These three must be in following order:
+  # zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting
+  - zsh-autosuggestions
+  - zsh-history-substring-search
+  - zsh-syntax-highlighting

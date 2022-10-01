@@ -13,9 +13,10 @@
   tags: ohmyzsh
 
 - name: '[users_colorls] Ensure the configuration directory exists for all users'
-  file:
+  ansible.builtin.file:
     path: ~/.config/colorls
     state: directory
+    mode: 0755
   become: true
   become_user: "{{ item.user }}"
   with_items: "{{ ohmyzsh_users }}"

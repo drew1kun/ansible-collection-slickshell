@@ -7,6 +7,7 @@
           /vim-airline-themes/autoload/airline/themes/"
     owner: "{{ vim_airline_user }}"
     group: "{{ vim_airline_user if 'Darwin' not in ansible_os_family else 'wheel' if vim_airline_user == 'root' else 'staff' }}"
+    mode: 0644
   loop: "{{ vim_users }}"
   loop_control:
     loop_var: vim_airline_user
@@ -23,6 +24,7 @@
           /vim-airline-themes/autoload/airline/themes/"
     owner: root
     group: root
+    mode: 0644
   become: true
   when: "'system' in vim_env"
   tags: vim

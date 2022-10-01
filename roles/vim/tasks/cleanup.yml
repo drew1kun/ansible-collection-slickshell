@@ -2,7 +2,7 @@
 - name: '[cleanup] Finding old vim configs /etc/vim/ and /root/'
   find:
     file_type: any
-    paths: [ '/root/', '/etc/vim/' ]
+    paths: ['/root/', '/etc/vim/']
     patterns: 'vimrc.*,.vim*'
     hidden: true
   register: sys_vim_cfg_files
