@@ -12,7 +12,7 @@ vim_env: user
 # only if system-wide configuration is NOT planned to be used on this system
 # For non-root users it is possible to use both system-wide and user configurations
 vim_users:
-- "{{ ansible_user_id }}"
+  - "{{ ansible_user_id }}"
 
 vim_neovim: true
 
@@ -33,12 +33,12 @@ vim_vundle_version: 'v0.10.2'
 # the name value must be the last part of the plugin name after / delimiter:
 # e.g. for 'mileszs/ack.vim' plugin name: ack.vim
 vim_plugins:
-- { name: 'tpope/vim-sensible' }             # Starting point for vim configuration
-- { name: 'vim-airline/vim-airline' }        # Lightweight vimscrip-based statusline
-- { name: 'vim-airline/vim-airline-themes' } # vim-airline theme collection
-- { name: 'edkolev/tmuxline.vim' }           # tmux status line generator with vim-airline integration
-- { name: 'junegunn/vim-emoji' }             # EMOJI
-- { name: 'junegunn/fzf', opts: "'dir': '~/.fzf', 'do': './install --all', 'on': ['Files']" }
-- { name: 'junegunn/fzf.vim', opts: "'on': ['Files']" }
+  - { name: 'tpope/vim-sensible' }             # Starting point for vim configuration
+  - { name: 'vim-airline/vim-airline' }        # Lightweight vimscrip-based statusline
+  - { name: 'vim-airline/vim-airline-themes' } # vim-airline theme collection
+  - { name: 'edkolev/tmuxline.vim' }           # tmux status line generator with vim-airline integration
+  - { name: 'junegunn/vim-emoji' }             # EMOJI
+  - { name: 'junegunn/fzf', opts: "'dir': '~/.fzf', 'do': './install --all', 'on': ['Files']" }
+  - { name: 'junegunn/fzf.vim', opts: "'on': ['Files']" }
 
 vim_emoji_git_integration: false  # Itegrate emoji with gitgutter or signify (some people don't like the look)

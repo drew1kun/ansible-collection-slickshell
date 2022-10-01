@@ -2,7 +2,7 @@
 # Create a directory ~/.vim.local in order not to pollute home directory
 - name: "[user] Create {{ vim_root_cust_conf_dir }} directory for custom configuration content"
   file: path="{{ vim_root_conf_plug_dir }}" state=directory
-  become: yes    # Required for become_user to work
+  become: true    # Required for become_user to work
   #become_method: su  # only good for root user to become another user when sudo package is not available
   become_user: "{{ item }}"
   with_items: "{{ vim_users }}"
@@ -18,7 +18,7 @@
   with_items: "{{ vim_users }}"
   #when: (vim_users is defined and item != "root")
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
   tags: vim
 
@@ -28,7 +28,7 @@
     dest: ~/.vimrc
     state: link
   with_items: "{{ vim_users }}"
-  become: yes
+  become: true
   become_user: "{{ item }}"
   when: vim_users is defined
   tags: vim
@@ -43,7 +43,7 @@
   with_items: "{{ vim_users }}"
   #when: (vim_users is defined and item != "root")
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
   tags: vim
 
@@ -56,7 +56,7 @@
     mode: 0644
   with_items: "{{ vim_users }}"
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
   tags: vim
 
@@ -69,14 +69,14 @@
     group: "{{ item.0 if ansible_os_family != 'Darwin' else 'wheel' if item.0 == 'root' else 'staff' }}"
     mode: 0644
   with_nested:
-  - "{{ vim_users }}"
-  - "{{ vim_checklist }}"
-  - "{{ vim_plugins }}"
-  become: yes
+    - "{{ vim_users }}"
+    - "{{ vim_checklist }}"
+    - "{{ vim_plugins }}"
+  become: true
   become_user: "{{ item.0 }}"
   when:
-  - "vim_users is defined"
-  - "item.1.name in item.2.name"
+    - "vim_users is defined"
+    - "item.1.name in item.2.name"
   tags: vim
 
 - name: '[user] Copying .vim folder to ~/.vim'
@@ -87,7 +87,7 @@
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
   with_items: "{{ vim_users }}"
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
   tags: vim
 
@@ -102,25 +102,23 @@
   until: vim_spell_result is succeeded
   with_items: "{{ vim_users }}"
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
 #  vars:
 #    ansible_python_interpreter: '/usr/local/bin/python3'
   tags: vim
-  
-
 
 - name: '[user] Set EDITOR and TERM environment variables'
   blockinfile:
     path: ~/.bashrc
-    follow: yes
+    follow: true
     owner: "{{ item }}"
     group: "{{ item }}"
     content: |
       export EDITOR="/usr/bin/vim"
       export TERM="xterm-256color"  # For vim colors in tmux
     marker: "# {mark} ======== VIM role: Ansible managed block ========="
-  become: yes
+  become: true
   become_user: "{{ item }}"
   with_items: "{{ vim_users }}"
   when: "not 'Darwin' in ansible_os_family"

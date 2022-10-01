@@ -2,7 +2,7 @@
 - name: '[nvim] Install neovim on Darwin'
   homebrew:
     name: neovim
-  become: no
+  become: false
   register: vim_neovim_install_result
   until: vim_neovim_install_result is succeeded
   when: "'Darwin' in ansible_os_family"
@@ -11,7 +11,7 @@
 - name: '[nvim] Install neovim on non-Darwin systems'
   package:
     name: neovim
-  become: yes
+  become: true
   register: vim_neovim_install_result
   until: vim_neovim_install_result is succeeded
   when: "not 'Darwin' in ansible_os_family"
@@ -23,9 +23,12 @@
     dest: "{{ item.dest }}"
     state: link
   with_items:
-  - { src: '~/.vim', dest: '~/.config/nvim' }
-  - { src: '~/.vimrc', dest: '~/.vim/init.vim' }
-  #- { src: "{{ vim_root_config }}", dest: '~/.vim/init.vim' }
+    # This may require refactoring for system-wide nvim setup:
+    - { src: "{{ vim_root_dir }}", dest: '~/.config/nvim' }
+    - { src: "{{ vim_root_config }}", dest: "{{ vim_root_dir }}/init.vim" }
+    # Info:
+    #- { src: '~/.vim', dest: '~/.config/nvim' }
+    #- { src: '~/.vimrc', dest: '~/.vim/init.vim' }
   when: "'user' in vim_env"
   tags: vim
 

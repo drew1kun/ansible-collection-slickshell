@@ -14,48 +14,48 @@
 #
 - name: '[debian] Install mpd package'
   action: >
-    {{ ansible_pkg_mgr }} name=mpd state=present update_cache=yes
-  become: yes
+    {{ ansible_pkg_mgr }} name=mpd state=present update_cache=true
+  become: true
   tags: mpd
 
 - name: '[debian] Install mpc package'
   action: >
-    {{ ansible_pkg_mgr }} name=mpc state=present update_cache=yes
-  become: yes
+    {{ ansible_pkg_mgr }} name=mpc state=present update_cache=true
+  become: true
   when: mpd_install_mpc
   tags:
-  - mpd
-  - mpc
+    - mpd
+    - mpc
 
 - name: '[debian] Install ncmpcpp package'
   action: >
-    {{ ansible_pkg_mgr }} name=ncmpcpp state=present update_cache=yes
-  become: yes
+    {{ ansible_pkg_mgr }} name=ncmpcpp state=present update_cache=true
+  become: true
   when: mpd_install_ncmpcpp
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp
 
 - name: '[debian] Enable and Start mpd service if needed'
   service:
     name: mpd
     enabled: "{{ mpd_autostart }}"
     state: "{% if mpd_autostart %}started{% else %}stopped{% endif %}"
-  become: yes
+  become: true
   tags: mpd
 
 - name: '[debian] Enable mpd socket if needed'
   service:
     name: mpd.socket
-    enabled: "{% if mpd_autostart %}no{% else %}yes{% endif %}"
+    enabled: "{% if mpd_autostart %}false{% else %}true{% endif %}"
     state: "{% if mpd_autostart %}stopped{% else %}started{% endif %}"
-  become: yes
+  become: true
   tags: mpd
 
 - name: '[debian] Generate mpd.conf from template'
-  template: src=mpd.conf.j2 dest=/etc/mpd.conf backup=yes owner=root group=root mode=0644
+  template: src=mpd.conf.j2 dest=/etc/mpd.conf backup=true owner=root group=root mode=0644
   notify: Restart mpd service
-  become: yes
+  become: true
   tags: mpd
 
 - name: '[debian] Create ~/.ncmpcpp folder for each mpd_user'
@@ -65,15 +65,15 @@
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: 0755
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   when:
-  - mpd_install_ncmpcpp
-  - mpd_users is defined
-  - mpd_users | length > 0
+    - mpd_install_ncmpcpp
+    - mpd_users is defined
+    - mpd_users | length > 0
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp
 
 - name: '[debian] Generate ncmpcpp config from template for each mpd_user'
   template:
@@ -82,29 +82,29 @@
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: 0644
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   when:
-  - mpd_install_ncmpcpp
-  - mpd_users is defined
-  - mpd_users | length > 0
+    - mpd_install_ncmpcpp
+    - mpd_users is defined
+    - mpd_users | length > 0
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp
 
 - name: '[debian] Check firewalld stats'
   stat: path="{{ item }}"
   register: mpd_stat_firewalld
-  become: yes
+  become: true
   with_items:
-  - /usr/sbin/firewalld
-  - /sbin/firewalld
+    - /usr/sbin/firewalld
+    - /sbin/firewalld
   tags: mpd
 
 - name: '[debian] Open mpd port in firewall'
-  firewalld: port="{{ mpd_port }}/tcp" zone="{{ item }}" permanent=true immediate=yes state=enabled
+  firewalld: port="{{ mpd_port }}/tcp" zone="{{ item }}" permanent=true immediate=true state=enabled
   with_items: "{{ mpd_firewall_zones }}"
-  become: yes
+  become: true
   when: mpd_stat_firewalld.results[0].stat.exists
         or
         mpd_stat_firewalld.results[1].stat.exists

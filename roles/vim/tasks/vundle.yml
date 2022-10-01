@@ -5,13 +5,13 @@
     dest: "~/.vim/{{ vim_plugins_dir }}/Vundle.vim"
     version: "{{ vim_vundle_version }}"
   with_items: "{{ vim_users }}"
-  become: yes
+  become: true
   become_user: "{{ item }}"
   register: vim_vundle_result
   until: vim_vundle_result is succeeded
   when:
-  - "'user' in vim_env"
-  - vim_users is defined
+    - "'user' in vim_env"
+    - vim_users is defined
   tags: vim
 
 - name: '[vundle] Installing Vundle'
@@ -19,7 +19,7 @@
     repo: https://github.com/gmarik/Vundle.vim.git
     dest: /var/lib/vim/addons/Vundle.vim
     version: "{{ vim_vundle_version }}"
-  become: yes
+  become: true
   register: vim_vundle_result
   until: vim_vundle_result is succeeded
   when: "'system' in vim_env"
@@ -35,7 +35,7 @@
 # Instead of command: "vim +PluginInstall +qall" we can use:
 # shell:
 #   vim -E -s -c "source /etc/vim/vimrc" -c PluginInstall -c qa
-# ignore_errors: yes
+# ignore_errors: true
 #
 # For troubleshooting add -V switch to this command and run it directly on the target
 - name: '[vundle] Downloading plugins using Vundle per user'
@@ -43,15 +43,15 @@
   register: vim_plugins_result
   failed_when: vim_plugins_result.rc > 1
   with_items: "{{ vim_users }}"
-  become: yes
+  become: true
   become_user: "{{ item }}"
   when:
-  - "'user' in vim_env"
-  - vim_users is defined
+    - "'user' in vim_env"
+    - vim_users is defined
   tags: vim
 
 - name: '[vundle] Downloading plugins using Vundle system-wide'
   command: 'vim -E -s -c "source /etc/vim/vimrc" -c PluginInstall -c qa'
-  become: yes
+  become: true
   when: "'system' in vim_env"
   tags: vim

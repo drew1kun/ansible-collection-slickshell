@@ -3,13 +3,13 @@
   package:
     name: [ 'zsh', 'git', 'bc' ]
     state: present
-  become: yes  # disable this for MacOS
+  become: true  # disable this for MacOS
   register: ohmyzsh_dep_result
   until: ohmyzsh_dep_result is succeeded
   when: "'Darwin' not in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 - name: '[dependencies] Make sure locales package is installed on Debian'
   apt: name=locales state=present
@@ -17,21 +17,21 @@
   until: ohmyzsh_dep_result is succeeded
   when: "'Debian' in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 # MacOS:
 - name: '[dependencies] Install powerlevel9k dependencies: bc'
   homebrew: name=bc state=present
-  become: no  # always the case with homebrew
+  become: false  # always the case with homebrew
   register: ohmyzsh_dep_result
   until: ohmyzsh_dep_result is succeeded
   when:
-  - ohmyzsh_powerlevel9k
-  - "'Darwin' in ansible_os_family"
+    - ohmyzsh_powerlevel9k
+    - "'Darwin' in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 - name: '[dependencies] Get correct brew prefix'
   command: 'brew --prefix'
@@ -40,35 +40,35 @@
   register: ohmyzsh_brew_prefix
   changed_when: false
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 - name: '[dependencies] Install fzf'
   homebrew: name=fzf state=present
-  become: no  # always the case with homebrew
+  become: false  # always the case with homebrew
   register: ohmyzsh_dep_result
   until: ohmyzsh_dep_result is succeeded
   when:
-  - "'Darwin' in ansible_os_family"
+    - "'Darwin' in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 - name: '[dependencies] Install fzf useful key bindings and fuzzy completion'
   command: "{{ ohmyzsh_brew_prefix.stdout }}/opt/fzf/install --key-bindings --completion --update-rc"
   changed_when: false
   when:
-  - "'Darwin' in ansible_os_family"
+    - "'Darwin' in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies
 
 - name: '[dependencies] Install zsh on MacOS'
   homebrew: name=zsh state=present
-  become: no
+  become: false
   register: ohmyzsh_dep_result
   until: ohmyzsh_dep_result is succeeded
   when: "'Darwin' in ansible_os_family"
   tags:
-  - ohmyzsh
-  - ohmyzsh_dependencies
+    - ohmyzsh
+    - ohmyzsh_dependencies

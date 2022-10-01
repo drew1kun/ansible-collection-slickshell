@@ -1,17 +1,17 @@
 ---
 - name: "[system] Generating /etc/vim/vimrc from template"
   template: src=vimrc.j2 dest="{{ vim_root_config }}" owner=root group=root mode=0644
-  become: yes
+  become: true
   tags: vim
 
 - name: "[system] Generating /etc/vim/vimrc.local from template"
   template: src=vimrc.local.j2 dest="{{ vim_root_local_config }}" owner=root group=root mode=0644
-  become: yes
+  become: true
   tags: vim
 
 - name: "[system] Generating /etc/vim/{{ vim_pm_config }} from template"
   template: src="{{ vim_pm_config }}.j2" dest="{{ vim_root_plugins }}" owner=root group=root mode=0644
-  become: yes
+  become: true
   tags: vim
 
 - name: "[system] Generating /etc/vim/vimrc.{{ plugin }} config files from templates"
@@ -21,23 +21,23 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   with_nested:
-  - "{{ vim_plugins }}"
-  - "{{ vim_checklist }}"
+    - "{{ vim_plugins }}"
+    - "{{ vim_checklist }}"
   when: "item.0.name in item.1.name"
   tags: vim
 
 - name: "[system] Copying .vim folder to /var/lib/vim/addons/"
   copy: src=vim/ dest=/var/lib/vim/addons/
-  become: yes
+  become: true
   tags: vim
 
 # remove the old /root/.vim directory for idempotent plugin installation with vundle
 # needed for system-wide installation only
 - name: "[system] removing old /root/.vim directory if present"
   file: path=/root/.vim state=absent
-  become: yes
+  become: true
   tags: vim
 
 - name: '[user] Download en.utf-8.spl spell file from ftp'
@@ -51,15 +51,15 @@
   until: vim_spell_result is succeeded
   with_items: "{{ vim_users }}"
   when: vim_users is defined
-  become: yes
+  become: true
   become_user: "{{ item }}"
   tags: vim
 
 - name: "[system] Setting EDITOR and TERM environment variables"
   blockinfile:
     path: /etc/profile.d/env_var.sh
-    follow: yes
-    create: yes
+    follow: true
+    create: true
     mode: 0644
     owner: root
     group: root
@@ -67,7 +67,7 @@
       export EDITOR="/usr/bin/vim visudo"
       export TERM="xterm-256color"  # For vim colors in tmux
     marker: "# {mark} ======== VIM role: Ansible managed block ========="
-  become: yes
+  become: true
   tags: vim
 
 - name: "[system] Include {{ vim_plugin_manager }} plugin manager and plugins installation tasks"
