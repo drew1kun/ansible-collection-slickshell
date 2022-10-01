@@ -1,0 +1,100 @@
+---
+- name: '[darwin] Include OSX-Specific variables'
+  include_vars: darwin.yml
+  tags: mpd
+
+- name: '[darwin] Determine brew prefix'
+  command: 'brew --prefix'
+  environment:
+    PATH: "/opt/homebrew/bin:/usr/local/bin:{{ ansible_env.PATH }}"
+  register: mpd_brew_prefix
+  changed_when: false
+  tags: mpd
+
+- name: '[darwin] Install mpd with Homebrew'
+  homebrew: name=mpd state=present
+  tags: mpd
+
+- name: '[darwin] Install mpc with Homebrew'
+  homebrew: name=mpc state=present
+  when: mpd_install_mpc
+  tags:
+  - mpd
+  - mpc
+
+- name: '[darwin] Install ncmpcpp with Homebrew'
+  homebrew: name=ncmpcpp state=present
+  when: mpd_install_ncmpcpp
+  tags:
+  - mpd
+  - ncmpcpp
+
+- name: '[darwin] Check if ~/Library/LaunchAgents/homebrew.mxcl.mpd.plist exists'
+  stat: path=~/Library/LaunchAgents/homebrew.mxcl.mpd.plist
+  register: mpd_stat_plist
+  tags: mpd
+
+- name: '[darwin] Enable mpd service to start on login'
+  command: "{{ mpd_brew_prefix.stdout }}/bin/brew services start mpd"
+  when:
+  - mpd_autostart
+  - not mpd_stat_plist.stat.exists
+  tags: mpd
+
+- name: '[darwin] Create ~/.mpd/ directory for each mpd_user'
+  file:
+    path: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.mpd"
+    state: directory
+    owner: "{{ item }}"  # Works only if gathering facts. Turns to root if using 'become: yes'
+    group: staff
+    mode: 0755
+  become: yes
+  with_items: "{{ mpd_users }}"
+  tags: mpd
+
+- name: '[darwin] Generate mpd.conf from template for each mpd_user'
+  template:
+    src: mpd.conf.j2
+    dest: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.mpd/mpd.conf"
+    backup: yes
+    owner: "{{ item }}"
+    group: staff
+    mode: 0644
+  become: yes
+  with_items: "{{ mpd_users }}"
+  notify: Restart mpd service with brew services command
+  tags: mpd
+
+- name: '[darwin] Create ~/.ncmpcpp folder for each mpd_user'
+  file:
+    path: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.ncmpcpp"
+    state: directory
+    owner: "{{ item }}"
+    group: "staff"
+    mode: 0755
+  become: yes
+  with_items: "{{ mpd_users }}"
+  when:
+  - mpd_install_ncmpcpp
+  - mpd_users is defined
+  - mpd_users | length > 0
+  tags:
+  - mpd
+  - ncmpcpp
+
+- name: '[darwin] Generate ncmpcpp config from template for each mpd_user'
+  template:
+    src: ncmpcpp.conf.j2
+    dest: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.ncmpcpp/config"
+    owner: "{{ item }}"
+    group: "staff"
+    mode: 0644
+  become: yes
+  with_items: "{{ mpd_users }}"
+  when:
+  - mpd_install_ncmpcpp
+  - mpd_users is defined
+  - mpd_users | length > 0
+  tags:
+  - mpd
+  - ncmpcpp

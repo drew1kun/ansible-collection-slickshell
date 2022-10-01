@@ -1,0 +1,48 @@
+---
+- name: '[cleanup] Finding old vim configs /etc/vim/ and /root/'
+  find:
+    file_type: any
+    paths: [ '/root/', '/etc/vim/' ]
+    patterns: 'vimrc.*,.vim*'
+    hidden: yes
+  register: sys_vim_cfg_files
+  become: yes
+  tags:
+  - vim
+  - vim_cleanup
+
+- name: '[cleanup] Removing old vim configuration from /etc/vim/ and /root/'
+  file: path="{{ item.path }}" state=absent
+  become: yes
+  with_items: "{{ sys_vim_cfg_files.files }}"
+  tags:
+  - vim
+  - vim_cleanup
+
+- name: '[cleanup] Finding old vim configs in ~/ for all users'
+  find: file_type=any paths=~/ patterns='.vim*' hidden=yes
+  register: user_vim_cfg_files
+  become: yes
+  become_user: "{{ item }}"
+  with_items: "{{ vim_users }}"
+  when:
+  - vim_users is defined
+  - "'user' in vim_env"
+  tags:
+  - vim
+  - vim_cleanup
+
+# https://stackoverflow.com/questions/46516649/\
+#   ansible-register-find-module-return-values-in-a-loop-and-extract-the-path-prop
+- name: '[cleanup] Removing old vim configuration'
+  file: path="{{ item }}" state=absent
+  become: yes
+  with_items:
+    # FLATTENING THE EXISTING DICTIONARY AND TURNING IT TO A LIST OF FILE PATHS:
+    - "{{ user_vim_cfg_files.results | sum(attribute='files', start=[]) | map(attribute='path') | list }}"
+  when:
+  - vim_users is defined
+  - "'user' in vim_env"
+  tags:
+  - vim
+  - vim_cleanup

@@ -1,0 +1,113 @@
+---
+- name: '[debian] Include all Debian-specific variables'
+  include_vars: debian.yml
+  tags: mpd
+
+# To do something only if some distro installed on the host
+# Even specific distro version can be specified, see:
+# https://raymii.org/s/tutorials/Ansible_-_Only_if_on_specific_distribution_or_distribution_version.html
+# example:
+#     when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+#
+# ansible_distribuion:  ['MacOSX', 'Debian', 'Ubuntu', 'CentOS', 'Red Hat Enterprise Linux',  'Windows 10']
+# ansible_os_family:    ['Darwin', 'Debian', 'Debian', 'RedHat', 'RedHat',                    'Windows']
+#
+- name: '[debian] Install mpd package'
+  action: >
+    {{ ansible_pkg_mgr }} name=mpd state=present update_cache=yes
+  become: yes
+  tags: mpd
+
+- name: '[debian] Install mpc package'
+  action: >
+    {{ ansible_pkg_mgr }} name=mpc state=present update_cache=yes
+  become: yes
+  when: mpd_install_mpc
+  tags:
+  - mpd
+  - mpc
+
+- name: '[debian] Install ncmpcpp package'
+  action: >
+    {{ ansible_pkg_mgr }} name=ncmpcpp state=present update_cache=yes
+  become: yes
+  when: mpd_install_ncmpcpp
+  tags:
+  - mpd
+  - ncmpcpp
+
+- name: '[debian] Enable and Start mpd service if needed'
+  service:
+    name: mpd
+    enabled: "{{ mpd_autostart }}"
+    state: "{% if mpd_autostart %}started{% else %}stopped{% endif %}"
+  become: yes
+  tags: mpd
+
+- name: '[debian] Enable mpd socket if needed'
+  service:
+    name: mpd.socket
+    enabled: "{% if mpd_autostart %}no{% else %}yes{% endif %}"
+    state: "{% if mpd_autostart %}stopped{% else %}started{% endif %}"
+  become: yes
+  tags: mpd
+
+- name: '[debian] Generate mpd.conf from template'
+  template: src=mpd.conf.j2 dest=/etc/mpd.conf backup=yes owner=root group=root mode=0644
+  notify: Restart mpd service
+  become: yes
+  tags: mpd
+
+- name: '[debian] Create ~/.ncmpcpp folder for each mpd_user'
+  file:
+    path: "{{ '' if item=='root' else '/home' }}/{{ item }}/.ncmpcpp"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0755
+  become: yes
+  with_items: "{{ mpd_users }}"
+  when:
+  - mpd_install_ncmpcpp
+  - mpd_users is defined
+  - mpd_users | length > 0
+  tags:
+  - mpd
+  - ncmpcpp
+
+- name: '[debian] Generate ncmpcpp config from template for each mpd_user'
+  template:
+    src: ncmpcpp.conf.j2
+    dest: "{{ '' if item=='root' else '/home' }}/{{ item }}/.ncmpcpp/config"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+  become: yes
+  with_items: "{{ mpd_users }}"
+  when:
+  - mpd_install_ncmpcpp
+  - mpd_users is defined
+  - mpd_users | length > 0
+  tags:
+  - mpd
+  - ncmpcpp
+
+- name: '[debian] Check firewalld stats'
+  stat: path="{{ item }}"
+  register: mpd_stat_firewalld
+  become: yes
+  with_items:
+  - /usr/sbin/firewalld
+  - /sbin/firewalld
+  tags: mpd
+
+- name: '[debian] Open mpd port in firewall'
+  firewalld: port="{{ mpd_port }}/tcp" zone="{{ item }}" permanent=true immediate=yes state=enabled
+  with_items: "{{ mpd_firewall_zones }}"
+  become: yes
+  when: mpd_stat_firewalld.results[0].stat.exists
+        or
+        mpd_stat_firewalld.results[1].stat.exists
+  vars:
+    ansible_python_interpreter: '/usr/bin/python3' # Fix the "Python Module not found.." Error
+  tags: mpd
