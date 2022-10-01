@@ -38,7 +38,7 @@ vim_plugins:
   - {name: 'vim-airline/vim-airline-themes'}  # vim-airline theme collection
   - {name: 'edkolev/tmuxline.vim'}            # tmux status line generator with vim-airline integration
   - {name: 'junegunn/vim-emoji'}              # EMOJI
-  - {name: 'junegunn/fzf', opts: "'dir': '~/.fzf', 'do': './install --all', 'on': ['Files']" }
-  - {name: 'junegunn/fzf.vim', opts: "'on': ['Files']" }
+  - {name: 'junegunn/fzf', opts: "'dir': '~/.fzf', 'do': './install --all', 'on': ['Files']"}
+  - {name: 'junegunn/fzf.vim', opts: "'on': ['Files']"}
 
 vim_emoji_git_integration: false  # Itegrate emoji with gitgutter or signify (some people don't like the look)

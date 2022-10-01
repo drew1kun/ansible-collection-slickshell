@@ -1,9 +1,8 @@
 ---
 # Create a directory ~/.vim.local in order not to pollute home directory
 - name: "[user] Create {{ vim_root_cust_conf_dir }} directory for custom configuration content"
-  file: path="{{ vim_root_conf_plug_dir }}" state=directory
+  file: path="{{ vim_root_conf_plug_dir }}" state=directory mode=0755
   become: true    # Required for become_user to work
-  mode: 0755
   become_user: "{{ item }}"
   with_items: "{{ vim_users }}"
   tags: vim
@@ -85,8 +84,8 @@
     dest: ~/.vim/
     owner: "{{ item }}"
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
-  directory_mode: 0755
-  mode: 0644
+    directory_mode: 0755
+    mode: 0644
   with_items: "{{ vim_users }}"
   when: vim_users is defined
   become: true
