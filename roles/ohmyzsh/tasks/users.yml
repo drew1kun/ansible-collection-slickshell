@@ -7,10 +7,10 @@
     owner: "{{ item.user }}"
     group: "{{ 'wheel' if item.user == 'root' else 'staff' }}"
   when:
-  - "item.state is not defined or 'present'in item.state"
-  - "'Darwin' in ansible_os_family"
+    - "item.state is not defined or 'present'in item.state"
+    - "'Darwin' in ansible_os_family"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Copy default zshrc to user home directory'
@@ -22,19 +22,19 @@
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when: "item.state is not defined or 'present'in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Create directory structure'
   file:
     path: "{{ ohmyzsh_root_dir if item.user == 'root' else ohmyzsh_home_dir ~ item.user }}/.zsh"
     state: directory
-    recurse: yes
+    recurse: true
     owner: "{{ item.user }}"
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when: "item.state is not defined or 'present'in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Generate default aliases'
@@ -46,7 +46,7 @@
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when: "item.state is not defined or 'present'in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Generate custom aliases'
@@ -58,7 +58,7 @@
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when: "item.state is not defined or 'present'in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 # Powerlevel9k
@@ -70,12 +70,12 @@
     owner: "{{ item.user }}"
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when:
-  - "item.state is not defined or 'present'in item.state"
-  - ohmyzsh_powerlevel9k is defined
-  - ohmyzsh_powerlevel9k
-  - "'powerlevel9k' in item.theme"
+    - "item.state is not defined or 'present'in item.state"
+    - ohmyzsh_powerlevel9k is defined
+    - ohmyzsh_powerlevel9k
+    - "'powerlevel9k' in item.theme"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Add custom sudoers config to not reset environment variables when doing `sudo -s` for each zsh user'
@@ -86,10 +86,10 @@
     owner: root
     group: "{{ 'root' if ansible_os_family != 'Darwin' else 'wheel' }}"
   when:
-  - ohmyzsh_powerlevel9k is defined
-  - ohmyzsh_powerlevel9k
+    - ohmyzsh_powerlevel9k is defined
+    - ohmyzsh_powerlevel9k
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 # Powerlevel10k
@@ -101,13 +101,13 @@
     owner: "{{ item.user }}"
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when:
-  - "item.state is not defined or 'present'in item.state"
-  - ohmyzsh_powerlevel10k is defined
-  - ohmyzsh_powerlevel10k
-  - ohmyzsh_powerlevel10k_import_config
-  - "'powerlevel10k' in item.theme"
+    - "item.state is not defined or 'present'in item.state"
+    - ohmyzsh_powerlevel10k is defined
+    - ohmyzsh_powerlevel10k
+    - ohmyzsh_powerlevel10k_import_config
+    - "'powerlevel10k' in item.theme"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 # Tmux
@@ -115,13 +115,13 @@
   package:
     name: tmux
     state: present
-  become: yes  # disable this for MacOS
+  become: true  # disable this for MacOS
   register: ohmyzsh_tmux_result
   until: ohmyzsh_tmux_result is succeeded
   when:
-  - "'Darwin' not in ansible_os_family"
-  - ohmyzsh_setup_tmux is defined
-  - ohmyzsh_setup_tmux
+    - "'Darwin' not in ansible_os_family"
+    - ohmyzsh_setup_tmux is defined
+    - ohmyzsh_setup_tmux
   tags:
   - ohmyzsh
   - ohmyzsh_tmux
@@ -130,16 +130,16 @@
   homebrew:
     name: tmux
     state: present
-  become: no  # always the case with homebrew
+  become: false  # always the case with homebrew
   register: ohmyzsh_tmux_result
   until: ohmyzsh_tmux_result is succeeded
   when:
-  - "'Darwin' in ansible_os_family"
-  - ohmyzsh_setup_tmux is defined
-  - ohmyzsh_setup_tmux
+    - "'Darwin' in ansible_os_family"
+    - ohmyzsh_setup_tmux is defined
+    - ohmyzsh_setup_tmux
   tags:
-  - ohmyzsh
-  - ohmyzsh_tmux
+    - ohmyzsh
+    - ohmyzsh_tmux
 
 - name: '[users] Generate tmux custom configuration'
   copy:
@@ -149,28 +149,28 @@
     owner: "{{ item.user }}"
     group: "{{ item.user if ansible_os_family != 'Darwin' else 'wheel' if item.user == 'root' else 'staff' }}"
   when:
-  - "item.state is not defined or 'present'in item.state"
-  - ohmyzsh_setup_tmux is defined
-  - ohmyzsh_setup_tmux
+    - "item.state is not defined or 'present'in item.state"
+    - ohmyzsh_setup_tmux is defined
+    - ohmyzsh_setup_tmux
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags:
-  - ohmyzsh
-  - ohmyzsh_tmux
+    - ohmyzsh
+    - ohmyzsh_tmux
 
 # Post setup
 - name: '[users] Set zsh as default shell'
   user: name={{ item.user }} shell=/bin/zsh
   when: "item.state is not defined or 'present'in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh
 
 - name: '[users] Set bash as default shell for uninstalled users'
   user: name={{ item.user }} shell=/bin/bash
   when:
-  - item.state is defined
-  - "'absent' in item.state"
+    - item.state is defined
+    - "'absent' in item.state"
   with_items: "{{ ohmyzsh_users }}"
-  become: yes
+  become: true
   tags: ohmyzsh

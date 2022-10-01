@@ -1,11 +1,11 @@
 ---
 # defaults file for mpd
 
-mpd_autostart: yes
+mpd_autostart: true
 
-mpd_install_mpc: yes
+mpd_install_mpc: true
 
-mpd_install_ncmpcpp: yes
+mpd_install_ncmpcpp: true
 
 mpd_ncmpcpp_mpd_host: localhost
 
@@ -17,12 +17,12 @@ mpd_port: 6600
 mpd_bind_to_address: any
 
 mpd_name: Music Player Daemon
-mpd_restore_paused: yes
-mpd_auto_update: yes
-mpd_follow_inside_symlinks: yes
-mpd_follow_outside_symlinks: no
+mpd_restore_paused: true
+mpd_auto_update: true
+mpd_follow_inside_symlinks: true
+mpd_follow_outside_symlinks: false
 #=======================================================================
 
 mpd_users:
-- "{{ ansible_user_id }}"
-- root
+  - "{{ ansible_user_id }}"
+  - root

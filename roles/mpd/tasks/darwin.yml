@@ -19,15 +19,15 @@
   homebrew: name=mpc state=present
   when: mpd_install_mpc
   tags:
-  - mpd
-  - mpc
+    - mpd
+    - mpc
 
 - name: '[darwin] Install ncmpcpp with Homebrew'
   homebrew: name=ncmpcpp state=present
   when: mpd_install_ncmpcpp
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp
 
 - name: '[darwin] Check if ~/Library/LaunchAgents/homebrew.mxcl.mpd.plist exists'
   stat: path=~/Library/LaunchAgents/homebrew.mxcl.mpd.plist
@@ -37,18 +37,18 @@
 - name: '[darwin] Enable mpd service to start on login'
   command: "{{ mpd_brew_prefix.stdout }}/bin/brew services start mpd"
   when:
-  - mpd_autostart
-  - not mpd_stat_plist.stat.exists
+    - mpd_autostart
+    - not mpd_stat_plist.stat.exists
   tags: mpd
 
 - name: '[darwin] Create ~/.mpd/ directory for each mpd_user'
   file:
     path: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.mpd"
     state: directory
-    owner: "{{ item }}"  # Works only if gathering facts. Turns to root if using 'become: yes'
+    owner: "{{ item }}"  # Works only if gathering facts. Turns to root if using 'become: true'
     group: staff
     mode: 0755
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   tags: mpd
 
@@ -56,11 +56,11 @@
   template:
     src: mpd.conf.j2
     dest: "/{{ 'var' if item=='root' else 'Users' }}/{{ item }}/.mpd/mpd.conf"
-    backup: yes
+    backup: true
     owner: "{{ item }}"
     group: staff
     mode: 0644
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   notify: Restart mpd service with brew services command
   tags: mpd
@@ -72,15 +72,15 @@
     owner: "{{ item }}"
     group: "staff"
     mode: 0755
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   when:
-  - mpd_install_ncmpcpp
-  - mpd_users is defined
-  - mpd_users | length > 0
+    - mpd_install_ncmpcpp
+    - mpd_users is defined
+    - mpd_users | length > 0
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp
 
 - name: '[darwin] Generate ncmpcpp config from template for each mpd_user'
   template:
@@ -89,12 +89,12 @@
     owner: "{{ item }}"
     group: "staff"
     mode: 0644
-  become: yes
+  become: true
   with_items: "{{ mpd_users }}"
   when:
-  - mpd_install_ncmpcpp
-  - mpd_users is defined
-  - mpd_users | length > 0
+    - mpd_install_ncmpcpp
+    - mpd_users is defined
+    - mpd_users | length > 0
   tags:
-  - mpd
-  - ncmpcpp
+    - mpd
+    - ncmpcpp

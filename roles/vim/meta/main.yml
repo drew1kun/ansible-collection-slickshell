@@ -7,29 +7,33 @@ galaxy_info:
   license: MIT
   min_ansible_version: 1.9
   platforms:
-  - name: MacOSX
-  - name: Ubuntu
-    versions:
-    - trusty
-  - name: Debian
-    versions:
-    - stretch
-    - jessie
-    - wheezy
+    - name: MacOSX
+      versions: all
+    - name: Ubuntu
+      versions:
+      - trusty
+    - name: Debian
+      versions:
+      - stretch
+      - jessie
+      - wheezy
+      - buster
+      - bullseye
   galaxy_tags:
-  - vim
-  - development
-  - system
-  - nvim
-  - neovim
-  - vundle
-  - vim_plug
-  - vim_plugin_manager
-  - macos
-  - ubuntu
-  - debian
-  - wheezy
-  - jessie
-  - stretch
-  - buster
-  - bullseye
+    - vim
+    - development
+    - system
+    - nvim
+    - neovim
+    - vundle
+    - vim_plug
+    - vim_plugin_manager
+    - macos
+    - trusty
+    - ubuntu
+    - debian
+    - wheezy
+    - jessie
+    - stretch
+    - buster
+    - bullseye

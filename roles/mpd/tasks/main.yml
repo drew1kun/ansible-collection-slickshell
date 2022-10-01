@@ -4,9 +4,9 @@
 - name: "[main] Include {{ ansible_os_family }}-specific tasks"
   include_tasks: "{{ ansible_os_family | lower }}.yml"
   tags:
-  - mpd
-  - mpc
-  - ncmpcpp
+    - mpd
+    - mpc
+    - ncmpcpp
 
 - name: "[main] Flush all handlers"
   meta: flush_handlers

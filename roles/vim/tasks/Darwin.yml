@@ -5,7 +5,7 @@
     state: present
   register: vim_install_result
   until: vim_install_result is succeeded
-  become: no
+  become: false
   tags: vim
 
 - name: '[Darwin] Check which SHELL is running'

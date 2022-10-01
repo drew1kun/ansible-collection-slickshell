@@ -10,7 +10,7 @@
   loop: "{{ vim_users }}"
   loop_control:
     loop_var: vim_airline_user
-  become: yes
+  become: true
   become_user: "{{ vim_airline_user }}"
   when: "'user' in vim_env"
   tags: vim
@@ -23,6 +23,6 @@
           /vim-airline-themes/autoload/airline/themes/"
     owner: root
     group: root
-  become: yes
+  become: true
   when: "'system' in vim_env"
   tags: vim

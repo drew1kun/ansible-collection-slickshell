@@ -7,14 +7,14 @@
   import_tasks: cleanup.yml
   when: vim_cleanup
   tags:
-  - vim
-  - vim_cleanup
+    - vim
+    - vim_cleanup
 
 - name: "[main] Import dependencies installation tasks"
   import_tasks: dependencies.yml
   tags:
-  - vim
-  - vim_dependencies
+    - vim
+    - vim_dependencies
 
 - name: "[main] Include Darwin-specific tasks if provisioning MacOS"
   include_tasks: darwin.yml
@@ -33,8 +33,8 @@
 - name: "[main] Include system configuration tasks"
   include_tasks: system.yml
   when:
-  - "'system' in vim_env"
-  - "not 'Darwin' in ansible_os_family"
+    - "'system' in vim_env"
+    - "not 'Darwin' in ansible_os_family"
   tags: vim
 
 - name: "[main] Include user configuration tasks"

@@ -4,17 +4,17 @@ ohmyzsh_install_dir: /usr/local/share/ohmyzsh   # On MacOS /usr/ is read-only, t
 ohmyzsh_cache_dir: $HOME/.ohmyzsh_cache         # This dir has to be writable. Mainly for macos, as /usr/ is read-only
 ohmyzsh_custom_aliases: $HOME/.zsh/aliases.local
 
-# If only p10k is set to yes, then p9k will not be installed and configured.
-# It is not recommended to set p9k only to yes, because it's slow).
-# If both p9k and p10k are set to yes, then p10k will be used but the p9k style will be sourced.
+# If only p10k is set to true, then p9k will not be installed and configured.
+# It is not recommended to set p9k only to true, because it's slow).
+# If both p9k and p10k are set to true, then p10k will be used but the p9k style will be sourced.
 # If installed both, but want to turn p9k off, then comment the following line in ~/.zshrc:
 #   source ${HOME}/.zsh/omz_powerlevel9k.cfg
-ohmyzsh_powerlevel10k: yes
-ohmyzsh_powerlevel10k_import_config: no
-ohmyzsh_powerlevel9k: no              # yes - use p9k prompt style | no - use p10k prompt style
+ohmyzsh_powerlevel10k: true
+ohmyzsh_powerlevel10k_import_config: false
+ohmyzsh_powerlevel9k: false              # true - use p9k prompt style | false - use p10k prompt style
 ohmyzsh_powerlevel9k_cfg: ${HOME}/.zsh/omz_powerlevel9k.cfg
 
-ohmyzsh_setup_tmux: yes
+ohmyzsh_setup_tmux: true
 
 ohmyzsh_default_theme: 'robbyrussell' # default fallback theme
 
@@ -23,7 +23,7 @@ ohmyzsh_users:
   theme: powerlevel10k/powerlevel10k  # ohmyzsh theme; use "random" for random theme
   ssh_ids: []                         # list of SSH ids to add to ohmyzsh ssh manager plugin
   state: present                      # present or absent, to install/uninstall
-  colorls: yes                        # Install colorls ruby gem
+  colorls: true                        # Install colorls ruby gem
   plugins:
   - sudo                              # Prefix current or previous command with sudo by pressing Esc twice
 
@@ -31,7 +31,7 @@ ohmyzsh_users:
   theme: powerlevel10k/powerlevel10k
   ssh_ids: []
   state: present
-  colorls: no                         # Install colorls ruby gem
+  colorls: false                         # Install colorls ruby gem
 
 ohmyzsh_default_plugins:
 - cp          # User rsync instead of cp
