@@ -85,8 +85,8 @@
     dest: ~/.vim/
     owner: "{{ item }}"
     group: "{{ item if ansible_os_family != 'Darwin' else 'wheel' if item == 'root' else 'staff' }}"
-  directory_mode: 0755
-  mode: 0644
+    directory_mode: 0755
+    mode: 0644
   with_items: "{{ vim_users }}"
   when: vim_users is defined
   become: true
