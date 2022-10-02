@@ -8,9 +8,9 @@ It is also a dependency for my workstation setup Ansible playbook.
 
 The roles included:
 
-  - `drew1kun.ohmyzhs` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/ohmyzsh/README.md))
-  - `drew1kun.vim` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/vim/README.md))
-  - `drew1kun.mpd` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/mpd/README.md))
+  - `drew1kun.slickshell.ohmyzhs` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/ohmyzsh/README.md))
+  - `drew1kun.slickshell.vim` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/vim/README.md))
+  - `drew1kun.slickshell.mpd` ([doc](https://github.com/drew1kun/ansible-collection-slickshell/blob/main/roles/mpd/README.md))
 
 ## Installation
 
