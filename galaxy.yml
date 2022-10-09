@@ -1,10 +1,10 @@
 namespace: drew1kun
 name: slickshell
-version: 1.0.2
+version: 1.0.3
 readme: README.md
 authors:
 - Andrew Shagayev <drew-kun@protonmail.com>
-description: Ansible Collection for installing my favourite fonts.
+description: Ansible Collection for slick shell experience.
 
 # The path to the license file for the collection. This path is relative to the root of the collection. This key is
 # mutually exclusive with 'license'
