@@ -2,8 +2,8 @@
 # ============ CONFIG RELATED ==============
 # music directory can also be nfs share if mpd built --with-libnfs
 #   mpd_music_dir: nfs://192.168.1.1/music
-mpd_music_dir: /Volumes/music                 # default: ~/music
-mpd_playlist_dir: /Volumes/music/playlists    # default:  ~/.mpd/playlists
+mpd_music_dir: "/Users/{{ ansible_user_id }}/Music/music_lib"     # default: ~/music
+mpd_playlist_dir: "/Users/{{ ansible_user_id }}/Music/playlists"  # default:  ~/.mpd/playlists
 
 mpd_db_file: ~/.mpd/mpd.db
 mpd_sticker_file: ~/.mpd/sticker.db
