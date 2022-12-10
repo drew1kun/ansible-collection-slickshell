@@ -84,6 +84,13 @@ cdf () {
     cd "$finderPath"
 }
 
+# Metsploit Framework, needs to be run with docker-compose:
+# https://hub.docker.com/r/heywoodlh/metasploit
+# https://github.com/heywoodlh/dockerfiles/tree/master/metasploit
+#
+alias msfconsole='mkdir -p ~/.local/metasploit && docker run -it --rm --net host -v ~/.local/metasploit/:/root/.msf4 -w /root/session -v $(pwd):/root/session heywoodlh/metasploit msfconsole $@'
+alias msfvenom='mkdir -p ~/.local/metasploit && docker run -it --rm -v ~/.local/metasploit/:/root/.msf4 -w /root/session -v $(pwd):/root/session heywoodlh/metasploit msfvenom $@'
+
 {% else %}
 alias rbv='echo "rbenv versions:" && \
     rbenv versions && \
