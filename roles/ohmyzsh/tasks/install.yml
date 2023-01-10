@@ -1,14 +1,27 @@
 ---
-- name: '[install] Clone oh-my-zsh repo'
+- name: "[install] {{ item.desc }}"
   ansible.builtin.git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "{{ ohmyzsh_install_dir }}"
     version: master
     update: true
   become: true
+  loop:
+    - repo: https://github.com/robbyrussell/oh-my-zsh.git
+      dest: "{{ ohmyzsh_install_dir }}"
+      desc: "Clone oh-my-zsh"
+    - repo: https://github.com/zsh-users/zsh-autosuggestions
+      dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-autosuggestions"
+      desc: "Make it fish-like: Clone zsh-autosuggestions plugin"
+    - repo: https://github.com/zsh-users/zsh-history-substring-search
+      dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-history-substring-search"
+      desc: "Make it fish-like: Clone zsh-history-substring-search plugin"
+    - repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+      dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-syntax-highlighting"
+      desc: "Make it fish-like: Clone zsh-syntax-highlighting plugin"
   tags: ohmyzsh
 
-- name: '[install] Clone Powerlevel9k theme to custom directory'
+- name: "[install] Clone Powerlevel9k theme to custom directory"
   ansible.builtin.git:
     repo: https://github.com/bhilburn/powerlevel9k.git
     dest: "{{ ohmyzsh_install_dir }}/custom/powerlevel9k"
@@ -18,7 +31,7 @@
   when: ohmyzsh_powerlevel9k is defined and true
   tags: ohmyzsh
 
-- name: '[install] Clone powerlevel10k theme to custom directory'
+- name: "[install] Clone powerlevel10k theme to custom directory"
   ansible.builtin.git:
     repo: https://github.com/romkatv/powerlevel10k.git
     dest: "{{ ohmyzsh_install_dir }}/custom/powerlevel10k"
@@ -28,34 +41,7 @@
   when: ohmyzsh_powerlevel10k is defined and true
   tags: ohmyzsh
 
-- name: '[install] Make it fish-like: Clone zsh-autosuggestions plugin'
-  ansible.builtin.git:
-    repo: https://github.com/zsh-users/zsh-autosuggestions
-    dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-autosuggestions"
-    version: master
-    update: true
-  become: true
-  tags: ohmyzsh
-
-- name: '[install] Make it fish-like: Clone zsh-history-substring-search plugin'
-  ansible.builtin.git:
-    repo: https://github.com/zsh-users/zsh-history-substring-search
-    dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-history-substring-search"
-    version: master
-    update: true
-  become: true
-  tags: ohmyzsh
-
-- name: '[install] Make it fish-like: Clone zsh-syntax-highlighting plugin'
-  ansible.builtin.git:
-    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
-    dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-syntax-highlighting"
-    version: master
-    update: true
-  become: true
-  tags: ohmyzsh
-
-- name: '[install] Setup zprofile for zsh'
+- name: "[install] Setup zprofile for zsh"
   ansible.builtin.template:
     src: zprofile.j2
     dest: "{{ ohmyzsh_zprofile_dir }}/zprofile"
@@ -67,7 +53,7 @@
   tags: ohmyzsh
 
 # For Debian and maybe other distros:
-- name: '[install] Set up en_US.UTF-8 locale'
+- name: "[install] Set up en_US.UTF-8 locale"
   community.general.locale_gen:
     name: en_US.UTF-8
     state: present
