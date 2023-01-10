@@ -3,7 +3,7 @@
 
 # Linux services:
 - name: Restart mpd service
-  service:
+  ansible.builtin.service:
     name: mpd
     state: restarted
     enabled: true
@@ -14,6 +14,6 @@
 ### MACOS
 # Brew services:
 - name: Restart mpd service with brew services command
-  command: "{{ mpd_brew_prefix.stdout }}/bin/brew services restart mpd"
+  ansible.builtin.command: "{{ mpd_brew_prefix.stdout }}/bin/brew services restart mpd"
   when: mpd_autostart
   become: false

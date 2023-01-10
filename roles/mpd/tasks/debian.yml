@@ -37,7 +37,7 @@
     - ncmpcpp
 
 - name: '[debian] Enable and Start mpd service if needed'
-  service:
+  ansible.builtin.service:
     name: mpd
     enabled: "{{ mpd_autostart }}"
     state: "{% if mpd_autostart %}started{% else %}stopped{% endif %}"
@@ -45,7 +45,7 @@
   tags: mpd
 
 - name: '[debian] Enable mpd socket if needed'
-  service:
+  ansible.builtin.service:
     name: mpd.socket
     enabled: "{% if mpd_autostart %}false{% else %}true{% endif %}"
     state: "{% if mpd_autostart %}stopped{% else %}started{% endif %}"
@@ -53,13 +53,13 @@
   tags: mpd
 
 - name: '[debian] Generate mpd.conf from template'
-  template: src=mpd.conf.j2 dest=/etc/mpd.conf backup=true owner=root group=root mode=0644
+  ansible.builtin.template: src=mpd.conf.j2 dest=/etc/mpd.conf backup=true owner=root group=root mode=0644
   notify: Restart mpd service
   become: true
   tags: mpd
 
 - name: '[debian] Create ~/.ncmpcpp folder for each mpd_user'
-  file:
+  ansible.builtin.file:
     path: "{{ '' if item=='root' else '/home' }}/{{ item }}/.ncmpcpp"
     state: directory
     owner: "{{ item }}"
@@ -76,7 +76,7 @@
     - ncmpcpp
 
 - name: '[debian] Generate ncmpcpp config from template for each mpd_user'
-  template:
+  ansible.builtin.template:
     src: ncmpcpp.conf.j2
     dest: "{{ '' if item=='root' else '/home' }}/{{ item }}/.ncmpcpp/config"
     owner: "{{ item }}"
@@ -93,7 +93,7 @@
     - ncmpcpp
 
 - name: '[debian] Check firewalld stats'
-  stat: path="{{ item }}"
+  ansible.builtin.stat: path="{{ item }}"
   register: mpd_stat_firewalld
   become: true
   with_items:
@@ -102,7 +102,7 @@
   tags: mpd
 
 - name: '[debian] Open mpd port in firewall'
-  firewalld: port="{{ mpd_port }}/tcp" zone="{{ item }}" permanent=true immediate=true state=enabled
+  ansible.posix.firewalld: port="{{ mpd_port }}/tcp" zone="{{ item }}" permanent=true immediate=true state=enabled
   with_items: "{{ mpd_firewall_zones }}"
   become: true
   when: mpd_stat_firewalld.results[0].stat.exists

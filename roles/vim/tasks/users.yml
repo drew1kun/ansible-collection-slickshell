@@ -1,14 +1,14 @@
 ---
 # Create a directory ~/.vim.local in order not to pollute home directory
 - name: "[user] Create {{ vim_root_cust_conf_dir }} directory for custom configuration content"
-  file: path="{{ vim_root_conf_plug_dir }}" state=directory mode=0755
+  ansible.builtin.file: path="{{ vim_root_conf_plug_dir }}" state=directory mode=0755
   become: true    # Required for become_user to work
   become_user: "{{ item }}"
   with_items: "{{ vim_users }}"
   tags: vim
 
 - name: "[user] Generating {{ vim_root_config }} from template"
-  template:
+  ansible.builtin.template:
     src: vimrc.j2
     dest: "{{ vim_root_config }}"
     owner: "{{ item }}"
@@ -22,7 +22,7 @@
   tags: vim
 
 - name: "[user] Symlink {{ vim_root_config }} to ~/.vimrc"
-  file:
+  ansible.builtin.file:
     src: "{{ vim_root_config }}"
     dest: ~/.vimrc
     state: link
@@ -33,7 +33,7 @@
   tags: vim
 
 - name: "[user] Generating {{ vim_root_local_config }} from template"
-  template:
+  ansible.builtin.template:
     src: vimrc.local.j2
     dest: "{{ vim_root_local_config }}"
     owner: "{{ item }}"
@@ -47,7 +47,7 @@
   tags: vim
 
 - name: "[user] Generating {{ vim_root_plugins }} from template"
-  template:
+  ansible.builtin.template:
     src: "{{ vim_pm_config }}.j2"
     dest: "{{ vim_root_plugins }}"
     owner: "{{ item }}"
@@ -61,7 +61,7 @@
 
 # CONFIGURE PLUGINS
 - name: "[user] Generating the ~/.vim/vim.local/vimrc.{{ plugin }} config files from templates"
-  template:
+  ansible.builtin.template:
     src: "{{ item.1.src }}"
     dest: "{{ item.1.path }}"
     owner: "{{ item.0 }}"
@@ -79,7 +79,7 @@
   tags: vim
 
 - name: '[user] Copying .vim folder to ~/.vim'
-  copy:
+  ansible.builtin.copy:
     src: vim/
     dest: ~/.vim/
     owner: "{{ item }}"
@@ -93,7 +93,7 @@
   tags: vim
 
 - name: '[user] Download en.utf-8.spl spell file from ftp'
-  get_url:
+  ansible.builtin.get_url:
     url: ftp://ftp.vim.org/pub/vim/runtime/spell/en.utf-8.spl
     dest: ~/.vim/spell/en.utf-8.spl
     owner: "{{ item }}"
@@ -108,7 +108,7 @@
   tags: vim
 
 - name: '[user] Set EDITOR and TERM environment variables'
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.bashrc
     follow: true
     owner: "{{ item }}"

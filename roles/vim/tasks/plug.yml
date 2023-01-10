@@ -1,6 +1,6 @@
 ---
 - name: '[plug] Ensure the installation directory exists per user'
-  file:
+  ansible.builtin.file:
     path: ~/.vim/autoload/
     state: directory
     owner: "{{ item }}"
@@ -15,7 +15,7 @@
   tags: vim
 
 - name: '[plug] Ensure the installation directory exists system-wide'
-  file:
+  ansible.builtin.file:
     path: /etc/vim/autoload
     state: directory
     owner: "{{ item }}"
@@ -26,7 +26,7 @@
   tags: vim
 
 - name: '[plug] Install Plug per user'
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: ~/.vim/autoload/plug.vim
     owner: "{{ item }}"
@@ -43,7 +43,7 @@
   tags: vim
 
 - name: '[plug] Install Plug system-wide'
-  get_url:
+  ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: /etc/vim/autoload/plug.vim
     owner: "{{ item }}"
@@ -69,7 +69,7 @@
 #
 # For troubleshooting add -V switch to this command and run it directly on the target
 - name: '[plug] Downloading plugins using Plug per user'
-  command: 'vim -E -s -c "source ~/.vimrc" -c PlugInstall -c qa'
+  ansible.builtin.command: 'vim -E -s -c "source ~/.vimrc" -c PlugInstall -c qa'
   with_items: "{{ vim_users }}"
   become: true
   become_user: "{{ item }}"
@@ -81,7 +81,7 @@
   tags: vim
 
 - name: '[plug] Downloading plugins using Plug system-wide'
-  command: 'vim -E -s -c "source /etc/vim/vimrc" -c PlugInstall -c qa'
+  ansible.builtin.command: 'vim -E -s -c "source /etc/vim/vimrc" -c PlugInstall -c qa'
   become: true
   register: vim_plugins_result
   failed_when: vim_plugins_result.rc > 1

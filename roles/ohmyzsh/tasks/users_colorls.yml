@@ -3,7 +3,7 @@
 #
 # In case of any colorls-related issue on the configured host issue 'sudo gem install colorls'
 - name: '[users_colorls] Install colorls ruby gem'
-  gem:
+  community.general.gem:
     name: colorls
     state: present
     user_install: false
@@ -26,7 +26,7 @@
   tags: ohmyzsh
 
 - name: '[users_colorls] Copy custom colorls configuration'
-  copy:
+  ansible.builtin.copy:
     src: colorls/
     dest: ~/.config/colorls/
     owner: "{{ item.user }}"

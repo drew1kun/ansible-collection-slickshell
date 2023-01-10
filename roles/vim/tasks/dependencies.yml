@@ -1,7 +1,7 @@
 ---
 # Both Plug and Vundle need git for plugins installation
 - name: '[dependencies] Non-MacOS: Install git, ag, ripgrep and CTags'
-  package:
+  ansible.builtin.package:
     name:
       - fzf
       - git
@@ -18,7 +18,7 @@
     - vim_dependencies
 
 - name: '[dependencies] MacOS: Install git, ag, ripgrep'
-  homebrew:
+  community.general.homebrew:
     name:
       - ag
       - fzf

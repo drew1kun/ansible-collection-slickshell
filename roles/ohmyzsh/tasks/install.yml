@@ -1,6 +1,6 @@
 ---
 - name: '[install] Clone oh-my-zsh repo'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "{{ ohmyzsh_install_dir }}"
     version: master
@@ -9,7 +9,7 @@
   tags: ohmyzsh
 
 - name: '[install] Clone Powerlevel9k theme to custom directory'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/bhilburn/powerlevel9k.git
     dest: "{{ ohmyzsh_install_dir }}/custom/powerlevel9k"
     version: master
@@ -19,7 +19,7 @@
   tags: ohmyzsh
 
 - name: '[install] Clone powerlevel10k theme to custom directory'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/romkatv/powerlevel10k.git
     dest: "{{ ohmyzsh_install_dir }}/custom/powerlevel10k"
     version: master
@@ -29,7 +29,7 @@
   tags: ohmyzsh
 
 - name: '[install] Make it fish-like: Clone zsh-autosuggestions plugin'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-autosuggestions
     dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-autosuggestions"
     version: master
@@ -38,7 +38,7 @@
   tags: ohmyzsh
 
 - name: '[install] Make it fish-like: Clone zsh-history-substring-search plugin'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-history-substring-search
     dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-history-substring-search"
     version: master
@@ -47,7 +47,7 @@
   tags: ohmyzsh
 
 - name: '[install] Make it fish-like: Clone zsh-syntax-highlighting plugin'
-  git:
+  ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
     dest: "{{ ohmyzsh_install_dir }}/custom/plugins/zsh-syntax-highlighting"
     version: master
@@ -56,7 +56,7 @@
   tags: ohmyzsh
 
 - name: '[install] Setup zprofile for zsh'
-  template:
+  ansible.builtin.template:
     src: zprofile.j2
     dest: "{{ ohmyzsh_zprofile_dir }}/zprofile"
     mode: 0644
@@ -68,7 +68,7 @@
 
 # For Debian and maybe other distros:
 - name: '[install] Set up en_US.UTF-8 locale'
-  locale_gen:
+  community.general.locale_gen:
     name: en_US.UTF-8
     state: present
   when:

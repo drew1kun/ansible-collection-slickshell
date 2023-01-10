@@ -1,6 +1,6 @@
 ---
 - name: '[airline] install custom vim-airline themes per user'
-  copy:
+  ansible.builtin.copy:
     src: airline-custom-themes/
     dest: "~/.vim/\
           {{ 'bundle' if 'vundle' in vim_plugin_manager else 'plugged' if 'plug' in vim_plugin_manager }}\
@@ -17,7 +17,7 @@
   tags: vim
 
 - name: '[airline] install custom vim-airline themes system-wide'
-  copy:
+  ansible.builtin.copy:
     src: "airline-custom-themes/solarized_custom.vim"
     dest: "/etc/vim/\
           {{ 'bundle' if 'vundle' in vim_plugin_manager else 'plugged' if 'plug' in vim_plugin_manager }}\

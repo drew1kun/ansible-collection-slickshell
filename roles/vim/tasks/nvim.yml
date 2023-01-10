@@ -1,6 +1,6 @@
 ---
 - name: '[nvim] Install neovim on Darwin'
-  homebrew:
+  community.general.homebrew:
     name: neovim
   become: false
   register: vim_neovim_install_result
@@ -9,7 +9,7 @@
   tags: vim
 
 - name: '[nvim] Install neovim on non-Darwin systems'
-  package:
+  ansible.builtin.package:
     name: neovim
   become: true
   register: vim_neovim_install_result
@@ -18,7 +18,7 @@
   tags: vim
 
 - name: '[nvim] Create neovim configuration by symlinking the existing vim config'
-  file:
+  ansible.builtin.file:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     state: link
