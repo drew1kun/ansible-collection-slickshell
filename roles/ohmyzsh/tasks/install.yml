@@ -1,5 +1,5 @@
 ---
-- name: "[install] {{ item.desc }}"
+- name: "[install] Clone ohmyzsh and plugins for fish-like behaviour"
   ansible.builtin.git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
     dest: "{{ ohmyzsh_install_dir }}"
